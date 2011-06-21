@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	
-	<title>JavaScript Tomusdrw's Examples</title>
+	<title>Advanced Javascript Examples</title>
 	<meta name="description" content="Examples that will help you to understand JS.">
 	<meta name="author" content="Tomusdrw">
 	
@@ -15,10 +15,23 @@
 	<link rel="stylesheet" href="js/codemirror/lib/codemirror.css">
 	<link rel="stylesheet" href="js/codemirror/theme/default.css">
     <link rel="stylesheet" href="css/styles.css">
+
+    <script type="text/javascript">
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-21299485-2']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
 </head>
 <body>
 		<header>
-			<h1>Javascript examples</h1>
+			<h1>Advanced Javascript examples</h1>
 		</header>
 		<div id="main" role="main">
 			<div class="example">
@@ -305,11 +318,11 @@ o1.c(); //15
 				<div class="code-container">
 					<label for="ex_oth_code">Code:</label>
 					<textarea id="ex_oth_code" class="codearea" rows="10" cols="50">
-var cont = true;
+var go = true;
 setTimeout(function(){
-	cont = false;
+	go = false;
 }, 1000);
-while(cont){}
+while(go){}
 					</textarea>
 					<button data-code="ex_oth_code" class="run button">Run code</button>
 				</div>
