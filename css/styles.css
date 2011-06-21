@@ -1,0 +1,63 @@
+body {
+	font-size: 11px;
+	text-align: left;
+	margin: 20px;
+	counter-reset: sect;
+}
+h1 {
+	max-width: 65%;
+	min-width: 600px;
+	font-size: 1.6em;
+	margin: 10px 0 15px;
+	border-bottom: 1px solid #6aa;
+	padding-left: 2px;
+}
+h2 {
+	font-size: 1.4em;
+	margin: 10px 0 10px -10px;
+}
+h2:before {
+	counter-increment: sect;
+	content: "Example " counter(sect) ": ";
+}
+h3 {
+	font-size: 1.2em;
+	margin: 5px 0 3px;
+}
+.code {
+	height: 150px;
+}
+.code-container {
+	float:left;
+	width: 400px;
+}
+footer {
+	margin-top: 15px;
+	font-size: 0.9em;
+	color: #ddd;
+	text-align: center;
+	font-style: italic;
+}
+.clear {
+	clear: both;
+}
+.button {
+	margin: 5px 0 3px;
+	padding: 5px 15px;
+}
+.button.run:before {
+	margin-right: 3px;
+	content: url('../images/run.png');
+}
+.example {
+	margin-left: 10px;
+}
+span.code {
+	font-family: monospace;
+}
+.CodeMirror-scroll {
+	height: auto;
+}
+#main {
+	max-width: 700px;
+}

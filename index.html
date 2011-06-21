@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	
+	<title>JavaScript Tomusdrw's Examples</title>
+	<meta name="description" content="Examples that will help you to understand JS.">
+	<meta name="author" content="Tomusdrw">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" href="favicon.ico">
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="js/codemirror/lib/codemirror.css">
+	<link rel="stylesheet" href="js/codemirror/theme/default.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+		<header>
+			<h1>Javascript examples</h1>
+		</header>
+		<div id="main" role="main">
+			<div class="example">
+			<!-- Comparison -->
+				<h2>Comparison</h2>
+				<div class="code-container">
+					<label for="ex_comp_code">Code:</label>
+					<textarea id="ex_comp_code" class="codearea" rows="10" cols="50">
+console.log([
+ 1 == '1',
+ 1 === '1',
+ true == 'true',
+ new String('a') == new String('a'),
+ null == undefined,
+ 0/0 == NaN,
+ '' == 0,
+ [] == ![],
+ [1,2,3] == [1,2,3]
+]);
+					</textarea>
+					<button data-code="ex_comp_code" class="run button">Run code</button>
+				</div>
+				<label for="ex_comp_result">Output:</label>
+				<textarea id="ex_comp_result" class="result" rows="10" cols="50">
+[
+true,
+false,
+false,
+false,
+true,
+false,
+true,
+true,
+false
+]
+				</textarea>
+				
+				<h3 class="clear">Explanation:</h3>
+				<p><code>1 == '1'</code> is true, because <code>==</code> is not strict comparator and casting occurs.</p>
+				<p><code>true == 'true'</code> is quite obvious. There is string to boolean casting and
+					any string that doesn't start with positive number is boolean <code>false</code></p>
+				<p>Line 5 is <code>false</code>, because two different string objects are created and references are compared. However:</p>
+				<textarea class="codearea" rows="5" cols="10">
+var a = new String('a'),
+    b = 'a';
+a == 'a';
+b == 'a';
+a == b;
+</textarea>
+				<p>is all <code>true</code>.</p>
+				<p>
+					<code>null == undefined</code> is very usefull when checking if variable is set
+					and is not <code>null</code>. Notice that <code>0 == undefined</code> is <code>false</code>.
+				</p>
+				<p>
+					<code>[] == ![]</code> is very interesting. Empty array is converted to boolean
+					<code>false</code>, but operator <code>!</code> used against object returns <code>true</code>
+					(because this object reference is not <code>null</code>).
+				</p>
+			</div>
+			
+			<div class="example">
+				<h2>Understanding references</h2>
+				<div class="code-container">
+					<label for="ex_refs_code">Code:</label>
+					<textarea id="ex_refs_code" class="codearea" rows="10" cols="50">
+for (var i=0; i<5; ++i) {
+  setTimeout(function() {
+	  var l = i+0;
+	  console.log(l);
+  }, 10);
+}
+					</textarea>
+					<button data-code="ex_refs_code" class="run button">Run code</button>
+				</div>
+				<label for="ex_refs_result">Output:</label>
+				<textarea id="ex_refs_result" class="result" rows="10" cols="50">
+5
+5
+5
+5
+5
+				</textarea>
+				
+				<h3 class="clear">Explanation:</h3>
+				<p>
+				Anonymous functions are created inside of the loop, but the reference of variable <code>i</code> is not resolved when the function is created
+				but when it is executed. So variable <code>i</code> is modified inside loop and when execution occurs this functions returns value <code>i</code>
+				has at the end of a loop.
+				Desired result can be acquired by creating instantly executed lambda functions returning function that prints something (remember that closures
+				are expensive).
+				</p>
+			</div>
+			
+			<div class="example">
+				<h2>Semicolons</h2>
+				<div class="code-container">
+					<label for="ex_semc_code">Code:</label>
+					<textarea id="ex_semc_code" class="codearea" rows="10" cols="50">
+console.log(
+  (function()
+  {
+    return
+    {
+      x: 5
+    };
+  }())
+);
+					</textarea>
+					<button data-code="ex_semc_code" class="run button">Run code</button>
+				</div>
+				<label for="ex_semc_result">Output:</label>
+				<textarea id="ex_semc_result" class="result" rows="10" cols="50">
+undefined
+				</textarea>
+				
+				<h3 class="clear">Explanation:</h3>
+				<p>
+				Javascript doesn't require semicolons at line ends, but interpreter inserts them.
+				In this example semicolon has been inserted in line 4 after <code>return</code>, because
+				there was nothing to return.
+				Lines 5-7 were treated as statement without effect (creating object without assigning reference).
+				</p>
+			</div>
+			
+			<div class="example">
+				<h2>Objects - contexts</h2>
+				<div class="code-container">
+					<label for="ex_obj1_code">Code:</label>
+					<textarea id="ex_obj1_code" class="codearea" rows="10" cols="50">
+var MyObject = {
+  a: 5,
+  b: function() {
+    this.c(2);
+  },
+  c: function(c) {
+    console.log(this.a + c);
+  }
+};
+//call function c in MyObject context
+MyObject.c(7);
+
+//call function x, but in current context
+//(probably global=window)
+var x = MyObject.c;
+this.a = 2;
+x(2); 
+
+var obj2 = {
+	a: 123
+};
+//call function x in obj2 context
+//with arguments as array
+x.apply(obj2, [1]);
+//call function c from MyObject in obj2 context
+//with given arguments
+MyObject.c.call(obj2, 2);
+
+//often mistake:
+setTimeout(MyObject.b, 0);
+setTimeout(MyObject.b.bind(MyObject), 0);
+					</textarea>
+					<button data-code="ex_obj1_code" class="run button">Run code</button>
+				</div>
+				<label for="ex_obj1_result">Output:</label>
+				<textarea id="ex_obj1_result" class="result" rows="10" cols="50">
+12
+4
+124
+125
+TypeError
+7
+				</textarea>
+				
+				<h3 class="clear">Explanation:</h3>
+				<p>
+				You can assign function to a variable easly, but context is resolved when function is executed not created so be careful
+				when referencing functions or passing them as an argument.
+				</p>
+				<p>
+				To call function in some object context use <code>call</code> and <code>apply</code> functions.
+				</p>
+				<p>
+				If you want to bind function context to some object use <code>bind</code> function. If <code>bind</code> function is not supported by browser use this:
+				</p>
+				<textarea class="codearea" rows="5" cols="10">
+Function.prototype.bind = function() {
+  var s = Array.prototype.slice,
+    a = s.apply(arguments),
+    ctx = a.shift(),
+    func = this;
+  return function() {
+    var b = s.apply(a);
+    b.push.apply(b, s.apply(arguments));
+    return func.apply(ctx, b);
+  };
+};
+				</textarea>
+			</div>
+
+			<div class="example">
+				<h2>Classes</h2>
+				<div class="code-container">
+					<label for="ex_obj2_code">Code:</label>
+					<textarea id="ex_obj2_code" class="codearea" rows="10" cols="50">
+var MyClass = function(m) {
+	var a = m;
+	this.b = 5;
+	this.c = function() {
+		console.log(a + this.b);
+		a++;
+	};
+};
+var o1 = new MyClass(5);
+o1.c();
+o1.b = 2;
+o1.c();
+
+var MyClass2 = function(m) {
+	this._a = m;
+};
+MyClass2.prototype = {
+	_a: null,
+	b: 5,
+	c: function() {
+		console.log(this._a + this.b);
+		this._a++;
+	}
+};
+var o2 = new MyClass2(5);
+o2.c();
+o2.b = 2;
+o2.c();
+					</textarea>
+					<button data-code="ex_obj2_code" class="run button">Run code</button>
+				</div>
+				<label for="ex_obj2_result">Output:</label>
+				<textarea id="ex_obj2_result" class="result" rows="10" cols="50">
+10
+8
+10
+8
+				</textarea>
+				
+				<h3 class="clear">Explanation:</h3>
+				<p>
+					This two methods of creating classes in JS are almost identical. Most important difference is that when
+					multiple objects of <code>MyClass</code> will be created, multiple (identical) <code>c</code> functions
+					will be created as well.
+				</p>
+				<p>
+					Using <code>prototype</code> defines a shared set of functions that every object of that type may use, but
+					only one instance of this function is created in memory. When many objects are created this has significant meaning.
+				</p>
+				<p>
+					With <code>prototype</code> it is also possible to create "private static" functions and variables like this:
+				</p>
+				<textarea class="codearea" rows="5" cols="10">
+var MyClass2 = function(m) {
+	this._a = m;
+};
+MyClass2.prototype = (function(){
+	var privateStaticVar = 5;
+	return {
+		_a: null,
+		b: 5,
+		c: function() {
+			console.log(this._a + this.b + privateStaticVar);
+			this._a++;
+			privateStaticVar++;
+		}
+	};
+}());
+var o1 = new MyClass2(2),
+	o2 = new MyClass2(3);
+o1.c(); //12
+o2.c(); //14
+o1.c(); //15
+</textarea>
+			</div>
+
+			<div class="example">
+				<h2>One thread</h2>
+				<div class="code-container">
+					<label for="ex_oth_code">Code:</label>
+					<textarea id="ex_oth_code" class="codearea" rows="10" cols="50">
+var cont = true;
+setTimeout(function(){
+	cont = false;
+}, 1000);
+while(cont){}
+					</textarea>
+					<button data-code="ex_oth_code" class="run button">Run code</button>
+				</div>
+				<label for="ex_oth_result">Output:</label>
+				<textarea id="ex_oth_result" class="result" rows="10" cols="50">
+This code will hang your browser
+				</textarea>
+				
+				<h3 class="clear">Explanation:</h3>
+				<p>
+				JavaScript is one-threaded. Timeouts and interval are "pushed" between instructions and then executed.
+				If there is no place (time) to put queued function it will not execute!
+				</p>
+			</div>
+		</div>
+		<footer>
+			<address>2011 &middot; tomusdrw</address>
+		</footer>
+	<script src="js/codemirror/lib/codemirror.js"></script>
+	<script src="js/codemirror/mode/javascript/javascript.js"></script>
+	<script src="js/script.js"></script>
+</body>
+</html>
